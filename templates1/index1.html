@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonMind Terminal</title>
+    <style>
+        body {
+            background: #050505;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #0f0;
+            overflow: hidden;
+        }
+
+        /* Matrix Grid Background */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                linear-gradient(rgba(0, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        .main-container {
+            display: flex;
+            width: 900px;
+            height: 600px;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            background: rgba(0, 10, 0, 0.95);
+            border-radius: 4px;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            border-right: 1px solid #0f0;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 20, 0, 0.5);
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            background: #0f0;
+            color: #000;
+            letter-spacing: 2px;
+        }
+
+        .cmd-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        /* Custom Scrollbar */
+        .cmd-list::-webkit-scrollbar { width: 5px; }
+        .cmd-list::-webkit-scrollbar-thumb { background: #0f0; }
+
+        .category {
+            font-size: 0.8rem;
+            color: #fff;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 2px;
+        }
+
+        .cmd-btn {
+            display: block;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #0f0;
+            padding: 8px 5px;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            opacity: 0.8;
+        }
+
+        .cmd-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            padding-left: 15px;
+            opacity: 1;
+            border-left: 3px solid #0f0;
+        }
+
+        /* Chat Area */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-header {
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #555;
+            border-bottom: 1px solid #333;
+            text-align: right;
+        }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chat-box::-webkit-scrollbar { width: 5px; }
+        .chat-box::-webkit-scrollbar-thumb { background: #0f0; }
+
+        .message {
+            max-width: 85%;
+            padding: 10px;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .bot-msg {
+            color: #0f0;
+            border-left: 2px solid #0f0;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .user-msg {
+            color: #00ffff;
+            border-right: 2px solid #00ffff;
+            background: rgba(0, 255, 255, 0.05);
+            align-self: flex-end;
+            text-align: right;
+        }
+
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.5);
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button.send-btn {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 5px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        button.send-btn:hover { box-shadow: 0 0 10px #0f0; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="sidebar">
+        <div class="sidebar-header">DATABASE MENU</div>
+        <div class="cmd-list">
+            
+            <div class="category">[ SYSTEM IDENTITY ]</div>
+            <button class="cmd-btn" onclick="sendCmd('Who are you?')">> Who are you?</button>
+            <button class="cmd-btn" onclick="sendCmd('What is this project?')">> What is this?</button>
+            <button class="cmd-btn" onclick="sendCmd('Developer')">> Developer Info</button>
+
+            <div class="category">[ DIAGNOSTICS ]</div>
+            <button class="cmd-btn" onclick="sendCmd('Check Engine')">> Check Engine</button>
+
+            <div class="category">[ ARCHITECTURE ]</div>
+            <button class="cmd-btn" onclick="sendCmd('How do you work?')">> How it works</button>
+            <button class="cmd-btn" onclick="sendCmd('Tech Stack')">> Tech Stack</button>
+            <button class="cmd-btn" onclick="sendCmd('Why use C?')">> Why use C?</button>
+            <button class="cmd-btn" onclick="sendCmd('Why use Python?')">> Why use Python?</button>
+
+            <div class="category">[ CODE STRUCTURE ]</div>
+            <button class="cmd-btn" onclick="sendCmd('Explain app.py')">> Explain app.py</button>
+            <button class="cmd-btn" onclick="sendCmd('Explain chatbot_lib.c')">> Explain C Library</button>
+            <button class="cmd-btn" onclick="sendCmd('Explain index.html')">> Explain UI</button>
+            <button class="cmd-btn" onclick="sendCmd('Explain Hosting')">> Hosting Info</button>
+
+            <div class="category">[ ALGORITHMS ]</div>
+            <button class="cmd-btn" onclick="sendCmd('How does the matching work?')">> Match Algorithm</button>
+            <button class="cmd-btn" onclick="sendCmd('What is Levenshtein?')">> Levenshtein Dist.</button>
+
+            <div class="category">[ TERMINAL CMDS ]</div>
+            <button class="cmd-btn" onclick="sendCmd('Status')">> System Status</button>
+            <button class="cmd-btn" onclick="sendCmd('Security')">> Security Check</button>
+            <button class="cmd-btn" onclick="sendCmd('Reboot')">> Reboot System</button>
+        </div>
+    </div>
+
+    <div class="chat-section">
+        <div class="terminal-header">
+            CONN: SECURE | LATENCY: 12ms | MODE: ADMIN
+        </div>
+        <div class="chat-box" id="chatbox">
+            <div class="message bot-msg">
+                NEON_MIND v2.0 Initialized.<br>
+                Select a database query from the left or type a command.
+            </div>
+        </div>
+        <div class="input-area">
+            <span style="color: #0f0; margin-right: 10px;">root@neon:~$</span>
+            <form id="chat-form" style="display: flex; width: 100%; gap: 10px;">
+                <input type="text" id="user-input" placeholder="Enter command..." autocomplete="off">
+                <button type="submit" class="send-btn">ENTER</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('chat-form');
+    const chatbox = document.getElementById('chatbox');
+    const input = document.getElementById('user-input');
+
+    function sendCmd(cmd) {
+        input.value = cmd;
+        form.dispatchEvent(new Event('submit'));
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msg = input.value;
+        if (!msg) return;
+
+        chatbox.innerHTML += `<div class="message user-msg">${msg}</div>`;
+        input.value = '';
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        const formData = new FormData();
+        formData.append('msg', msg);
+
+        try {
+            const response = await fetch('/get_response', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            chatbox.innerHTML += `<div class="message bot-msg">${data.response}</div>`;
+        } catch (error) {
+            chatbox.innerHTML += `<div class="message bot-msg" style="color:red">ERROR: Connection Lost</div>`;
+        }
+        
+        chatbox.scrollTop = chatbox.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
